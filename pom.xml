@@ -18,4 +18,15 @@
   <build>
     <finalName>web-application war file</finalName>
   </build>
+<distributionManagement>
+    <snapshotRepository>
+      <id>nexus-snapshots</id>
+      <url>http://3.110.167.211:8081/repository/maven-snapshots/</url>
+    </snapshotRepository>
+    <repository>
+      <id>nexus-releases</id>
+      <url>http://3.110.167.211:8081/repository/maven-releases/</url>
+    </repository>
+  </distributionManagement>
+  
 </project>
