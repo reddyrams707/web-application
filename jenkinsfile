@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    
+    tools{
+        maven "maven 3.9.6"
+    }
+
+    stages {
+        stage('clone the repository') {
+            steps {
+                git credentialsId: 'GitHub_credential', url: 'https://github.com/reddyrams707/web-application.git'
+            }
+        }
+        
+         stage('build the code') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        
+         stage('push to nexus repository') {
+            steps {
+                nexusArtifactUploader artifacts: [[artifactId: 'web-application', classifier: '', file: '/var/lib/jenkins/workspace/b-d/target/web-application war file.war', type: 'war']], credentialsId: 'nexus_credential', groupId: 'com.techworldwithmurali', nexusUrl: '13.201.6.129:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: '1.0-SNAPSHOT'
+            }
+        }
+        
+         stage('deploy to tomcat') {
+            steps {
+                deploy adapters: [tomcat7(credentialsId: 'Tocat_credentials', path: '', url: 'http://65.2.30.160:8080/')], contextPath: null, war: '**/*.war'
+            }
+        }
+        
+    }
+    
+    post {
+  always {
+    echo "build completed"
+  }
+}
+
+}
